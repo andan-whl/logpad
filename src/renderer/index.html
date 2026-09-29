@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; worker-src 'self' blob:"
+    />
+    <title>LogPad</title>
+  </head>
+  <body>
+    <!-- 五区布局骨架：菜单栏 / 工具栏 / 标签栏 / 主区（编辑器 + 底部面板）/ 状态栏 -->
+    <div id="menubar">
+      <!-- TODO(任务5 menubar.js 动态替换以下演示内容) -->
+      <div class="menubar-item">文件</div>
+      <div class="menubar-item">编辑</div>
+      <div class="menubar-item">搜索</div>
+      <div class="menubar-item">视图</div>
+      <div class="menubar-item">编码</div>
+      <div class="menubar-item">设置</div>
+      <div class="menubar-item">工具</div>
+      <div class="menubar-item">帮助</div>
+    </div>
+    <div id="toolbar">
+      <!-- TODO(任务5 toolbar.js 动态替换以下演示内容) -->
+      <div class="toolbar-group" id="demo-toolbar"></div>
+    </div>
+    <div id="tabbar">
+      <!-- TODO(任务4 tabs.js 动态替换以下演示内容) -->
+      <div class="tab active"><span class="tab-label">app.log</span></div>
+      <div class="tab dirty"><span class="tab-label">server.log</span></div>
+      <div class="tab-new">+</div>
+    </div>
+    <div id="main">
+      <div id="editor-host"></div>
+      <div id="panels">
+        <div id="panel-findinfiles" hidden></div>
+        <div id="panel-filter" hidden></div>
+      </div>
+    </div>
+    <div id="statusbar">
+      <!-- TODO(任务12 statusbar.js 动态替换以下演示内容) -->
+      <div class="status-left">
+        <div class="status-seg">长度 12,345</div>
+        <div class="status-seg">行 1,234</div>
+      </div>
+      <div class="status-right">
+        <div class="status-seg">UTF-8</div>
+        <div class="status-seg">LF</div>
+        <div class="status-seg">Log</div>
+        <div class="status-seg">100%</div>
+      </div>
+    </div>
+    <!-- 弹层挂载层：下拉菜单 / 右键菜单 / 模态 -->
+    <div id="overlay-layer"></div>
+    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/demo.js"></script>
+  </body>
+</html>

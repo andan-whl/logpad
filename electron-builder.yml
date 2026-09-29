@@ -1,0 +1,53 @@
+appId: cn.trae.logpad
+productName: LogPad
+copyright: Copyright © 2026 LogPad
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - out/**
+  - package.json
+  - "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}"
+
+# 主进程/预加载已由 electron-vite 打包进 out/，运行时仅依赖（iconv-lite）需随包
+asar: true
+
+win:
+  icon: build/icon.png
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: LogPad
+  artifactName: LogPad-Setup-${version}-${arch}.${ext}
+
+portable:
+  artifactName: LogPad-Portable-${version}-${arch}.${ext}
+
+linux:
+  icon: build/icon.png
+  category: Utility
+  maintainer: LogPad Contributors
+  target:
+    - target: tar.gz
+      arch:
+        - x64
+  artifactName: LogPad-${version}-${arch}.${ext}
+
+# AppImage 需 WSL/Linux 环境运行 mksquashfs，经 `npm run dist:linux:appimage` 构建
+appImage:
+  artifactName: LogPad-${version}-${arch}.${ext}
+
+# deb 由 scripts/build-deb.mjs 自建（Windows 无 fpm），依赖列表见该脚本

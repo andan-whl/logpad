@@ -1,0 +1,14 @@
+node_modules/
+out/
+release/
+.smoke/
+.userdata/
+.trae/
+samples/large.log
+.eb-cache/
+.electron-cache/
+# 本地运行产物（不入库）
+/debug.log
+/新建 1.log
+Thumbs.db
+.DS_Store

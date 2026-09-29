@@ -1,0 +1,85 @@
+2026-09-24 09:00:00.001 INFO  [main] LogPad 服务启动，版本 1.0.0-beta.3，进程 PID=4821，工作目录 /var/logpad
+2026-09-24 09:00:00.128 INFO  [config] 加载配置文件 file:///etc/logpad/config.yaml，共 42 项
+2026-09-24 09:00:00.356 DEBUG [config] 合并环境变量覆盖：LOGPAD_PORT=8080, LOGPAD_LOG_LEVEL=DEBUG
+2026-09-24 09:00:00.512 TRACE [config] 原始配置快照：{"app":{"name":"logpad","workers":4},"db":{"host":"127.0.0.1","port":5432,"user":"logpad","pool":{"min":2,"max":16}}}
+2026-09-24 09:00:01.003 INFO  [net] 监听 0.0.0.0:8080 成功，等待客户端连接
+2026-09-24 09:00:01.220 WARN  [net] 证书将在 30 天后过期：CN=*.logpad.example.com，请及时更换
+2026-09-24T09:00:02.001+08:00 INFO  [auth] 管理员登录成功，来源 IP 192.168.1.23，User-Agent Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+2026-09-24T09:00:02.345+08:00 INFO  [auth] 普通用户登录成功：张伟（工号 A1024），IP 10.0.12.7
+2026-09-24 09:00:03.100 DEBUG [cache] 预热缓存：加载 128 个文件元数据，耗时 342ms
+[09:00:03.500] INFO  [scheduler] 定时任务注册完成：日志归档(每日 02:00)、指标上报(每 60s)
+[09:00:04.001] TRACE [scheduler] 任务表：{"jobs":[{"id":"archive","cron":"0 0 2 * * ?","enabled":true},{"id":"metrics","cron":"*/60 * * * ?","enabled":true}]}
+2026-09-24 09:00:05,101 INFO  [db] 数据库连接池就绪 min=2 max=16 host=127.0.0.1:5432 database=logpad
+2026-09-24 09:00:05,234 DEBUG [db] 执行迁移脚本 V0012__add_follow_tail.sql，耗时 87ms
+2026-09-24 09:00:06.001 INFO  [api] GET /api/v1/files?limit=50 200 12ms，请求 ID 3f6c2a1e-8b7d-4c9a-b2f3-1d0e9f8a7b6c
+2026-09-24 09:00:06.318 INFO  [api] GET /api/v1/files/samples%2Fapp.log/download 200 45ms
+2026-09-24 09:00:07.004 WARN  [api] 检测到客户端使用已废弃接口 /api/files，请升级到 /api/v1/files
+2026-09-24 09:00:08.220 INFO  [api] POST /api/v1/bookmarks 201 8ms，用户 张伟，请求 ID 9a8b7c6d-5e4f-4032-b1a0-c9d8e7f6a5b4
+2026-09-24 09:00:09.001 DEBUG [render] 渲染视图 dashboard，组件数 23，首帧耗时 156ms
+2026-09-24 09:00:10.005 TRACE [render] 布局计算：width=1280 height=860 dpi=1.25 grid=12x8
+2026-09-24 09:00:11.300 INFO  [ws] WebSocket 客户端接入：f81d4fae-7dec-11d0-a765-00a0c91e6bf6
+2026-09-24 09:00:12.000 INFO  [ws] 订阅频道：tail:samples/app.log，filter=level>=WARN
+2026-09-24 09:00:15.441 WARN  [tail] 文件 samples/nginx.access.log 超过 2 分钟无更新，可能已轮转
+2026-09-24 09:00:16.002 INFO  [tail] 检测到轮转：samples/nginx.access.log -> samples/nginx.access.log.1，重新从文件头跟随
+2026-09-24 09:00:18.117 ERROR [db] 查询超时：SELECT * FROM log_entries WHERE level='ERROR' AND ts > '2026-09-24 08:00:00'，耗时 30002ms
+2026-09-24 09:00:18.118 ERROR [db] 建议检查索引 idx_log_entries_ts_level 是否可用，或缩小查询时间范围
+2026-09-24T09:00:18.119+08:00 WARN  [pool] 连接池使用率 15/16，接近上限，慢查询可能是根因
+2026-09-24 09:00:18.120 INFO  [retry] 数据库查询进入重试队列，第 1 次，退避 1000ms
+[09:00:19.121] INFO  [retry] 数据库查询重试成功，耗时 45ms，索引已命中
+2026-09-24 09:00:20.006 DEBUG [gc] 堆内存：used=312MB total=512MB rss=640MB，GC 暂停 12ms
+2026-09-24 09:00:21.500 INFO  [api] GET /api/v1/search?q=ERROR&regex=false 200 89ms，命中 3 条
+2026-09-24 09:00:22.010 INFO  [api] GET /api/v1/goto?line=42 200 3ms
+2026-09-24 09:00:23.875 WARN  [api] 客户端 172.16.8.42 请求频率超限：120 次/分钟（阈值 100），已限流 60s
+2026-09-24 09:00:24.001 TRACE [http] 限流详情 {"client":"172.16.8.42","window":"60s","hits":120,"limit":100,"retryAfter":"2026-09-24T09:01:23.875+08:00"}
+2026-09-24 09:00:25.666 INFO  [auth] 用户 张伟 修改书签：添加行 18，文件 samples/app.log
+2026-09-24 09:00:26.401 DEBUG [i18n] 语言包加载：zh-CN.json（覆盖 1024 条），备用 en-US.json
+2026-09-24 09:00:27.000 INFO  [api] PUT /api/v1/settings 200 15ms，更新：theme=dark, fontSize=15, wordWrap=true
+2026-09-24 09:00:28.222 INFO  [plugin] 插件加载完成：csv-viewer@2.1.0、json-formatter@1.8.3
+2026-09-24 09:00:29.101 DEBUG [plugin] 插件签名校验通过，证书 CN=LogPad Plugin CA, OU=Dev, O=LogPad, C=CN
+2026-09-24 09:00:30.004 TRACE [bus] 事件总线订阅统计：file.changed=8, settings.changed=3, theme.changed=2
+2026-09-24 09:00:31.990 WARN  [fs] 磁盘空间不足：/var/logpad 剩余 1.2GB（阈值 2GB），请清理归档
+2026-09-24 09:00:32.530 INFO  [fs] 归档清理完成：删除 7 个 .gz 归档，释放 3.4GB，来源 https://logpad.example.com/docs/cleanup
+2026-09-24 09:00:33.001 INFO  [api] GET /healthz 200 1ms
+2026-09-24 09:00:34.770 DEBUG [net] TCP 保活探测：peer=203.0.113.10:52311 ok=1 rtt=23ms
+2026-09-24 09:00:35.102 INFO  [api] GET /api/v1/files/1743/content?range=0-65535 206 11ms
+2026-09-24 09:00:36.555 INFO  [ws] 心跳正常：clients=2 threads=4 latency(avg)=8ms
+2026-09-24 09:00:37.000 TRACE [metrics] 指标快照 {"cpu":0.12,"mem":"312MB","qps":18.5,"p99":"142ms","endpoints":["/api/v1/files","/api/v1/search","/healthz"],"uptime":"37s"}
+2026-09-24 09:00:38.309 DEBUG [search] 正则编译：pattern=(?i)\b(error|fatal)\b.*timeout，命中样本 3 行
+2026-09-24 09:00:39.001 INFO  [api] POST /api/v1/filter 200 6ms，规则：{"levels":["ERROR","FATAL"],"exclude":false,"keyword":"timeout"}
+2026-09-24 09:00:40.444 INFO  [render] 视图切换：dashboard -> files，保持滚动状态
+2026-09-24 09:00:41.220 DEBUG [i18n] 翻译缺失回退：key=panel.findinfiles.title -> "在文件中查找"
+2026-09-24 09:00:42.000 INFO  [api] GET /api/v1/files/1743/encoding 200 2ms，结果：UTF-8（无 BOM）
+2026-09-24 09:00:43.818 WARN  [fs] 检测到 GBK 编码文件 samples/legacy-gbk.log，自动转换显示（原始字节未修改）
+2026-09-24 09:00:44.001 INFO  [fs] 大文件检查：samples/huge/app-100mb.log 大小 104.8MB ≥ 阈值 20MB，启用大文件模式（禁用高亮）
+2026-09-24 09:00:45.660 DEBUG [stream] 流式读取：chunk=1MB buffers=4 backlog=0，首屏 1.2s
+2026-09-24 09:00:46.311 INFO  [api] GET /api/v1/files/1743/content?range=65536-131071 206 9ms
+2026-09-24 09:00:47.005 TRACE [stream] 预取窗口：[131072, 262144)，命中率 91%
+2026-09-24 09:00:48.900 ERROR [plugin] 插件 csv-viewer 执行异常：java.lang.NumberFormatException: For input string: "N/A"
+java.lang.NumberFormatException: For input string: "N/A"
+	at com.logpad.plugin.csv.CsvViewer.parseInt(CsvViewer.java:214)
+	at com.logpad.plugin.csv.CsvViewer.render(CsvViewer.java:98)
+	at com.logpad.plugin.PluginManager.lambda$invoke$0(PluginManager.java:77)
+	at java.base/java.util.concurrent.CompletableFuture.uniApplyNow(CompletableFuture.java:684)
+	at com.foo.bar.Dispatcher.dispatch(Dispatcher.java:45)
+	at com.logpad.core.PluginHost.run(PluginHost.java:132)
+2026-09-24 09:00:49.001 WARN  [plugin] 插件 csv-viewer 已隔离，本次会话不再加载
+2026-09-24 09:00:50.230 INFO  [api] GET /api/v1/plugins 200 5ms，可用 1 个，隔离 1 个
+2026-09-24 09:00:51.777 DEBUG [cache] LRU 淘汰：key=content:1743:0-65535 evicted=true size=512MB/512MB
+2026-09-24 09:00:52.001 TRACE [bus] 事件分发 file.changed -> 8 个订阅者，耗时 3ms
+2026-09-24 09:00:53.405 INFO  [tail] 跟随模式开启：samples/app.log，轮询间隔 250ms
+2026-09-24 09:00:54.001 INFO  [api] GET /api/v1/follow/tail 200 2ms，新增 3 行
+2026-09-24T09:00:55.100+08:00 DEBUG [tail] 文件大小 24018 -> 24576 字节，增量读取 558 字节
+[09:00:56.200] INFO  [api] GET /healthz 200 1ms
+2026-09-24 09:00:57.001 WARN  [tail] 用户向上滚动，跟随模式自动暂停，显示"回到底部"按钮
+2026-09-24 09:00:58.350 INFO  [tail] 用户点击"回到底部"，跟随模式恢复
+2026-09-24 09:00:59.999 FATAL [core] 致命错误：主事件循环卡死 15003ms（超过阈值 15s），进程即将自杀重启
+java.util.concurrent.TimeoutException: Event loop stalled for 15003ms
+	at com.logpad.core.EventLoop.watchdog(EventLoop.java:301)
+	at com.logpad.core.EventLoop$WatchdogTask.run(EventLoop.java:277)
+	at java.base/java.lang.Thread.run(Thread.java:829)
+2026-09-24 09:01:00.001 FATAL [core] 堆转储已写入 /var/logpad/dumps/heap-2026-09-24-090100.hprof（384MB），退出码 70
+2026-09-24 09:01:00.100 INFO  [supervisor] 检测到子进程退出（code=70），3 秒后拉起重启
+2026-09-24 09:01:03.200 INFO  [main] LogPad 服务重启完成，进程 PID=5102，恢复会话：3 个打开的标签页
+2026-09-24 09:01:03.500 DEBUG [session] 会话恢复明细 {"tabs":[{"path":"samples/app.log","line":42,"col":1},{"path":"samples/nginx.access.log","line":1,"col":1},{"path":"config/app.yaml","line":17,"col":9}],"active":0}
+2026-09-24 09:01:04.001 INFO  [api] GET /healthz 200 1ms，服务恢复正常
+2026-09-24 09:01:05.001 INFO  [main] 一切正常，持续监控中……
