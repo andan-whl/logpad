@@ -14,10 +14,6 @@
 
 ![Ctrl+F 查找对话框 + 底部搜索结果面板](docs/screenshots/search.png)
 
-### 文件夹搜索（在文件中查找）
-
-![Ctrl+Shift+F 文件夹搜索，结果按文件分组](docs/screenshots/find-in-files.png)
-
 ## 使用说明
 
 ### 快速上手
