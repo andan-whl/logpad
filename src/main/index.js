@@ -137,6 +137,90 @@ function createWindow() {
     win.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
+  // ===== README 截图模式 =====
+  // LOGPAD_SMOKE=shots：依次生成三张界面截图到 .smoke/（只读操作，不修改任何文件）：
+  //   main.png（样例日志 + 工作区树）→ search.png（查找对话框 + 结果面板）→ find-in-files.png（文件夹搜索）
+  if (process.env.LOGPAD_SMOKE === 'shots') {
+    win.webContents.on('console-message', (_e, level, message, line, sourceId) => {
+      if (level >= 2) console.error(`[renderer:${level}] ${message} (${sourceId}:${line})`)
+    })
+    win.webContents.on('did-finish-load', () => {
+      setTimeout(async () => {
+        const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+        const save = async (file) => {
+          const img = await win.webContents.capturePage()
+          await writeFile(file, img.toPNG())
+          console.log('[shots] saved:', file)
+        }
+        try {
+          const dir = join(app.getAppPath(), '.smoke')
+          await mkdir(dir, { recursive: true })
+          const appLog = join(app.getAppPath(), 'samples', 'app.log').replace(/\\/g, '/')
+          const samplesDir = join(app.getAppPath(), 'samples').replace(/\\/g, '/')
+
+          // 1) 主界面：打开样例日志 + 工作区树
+          win.webContents.send('open-file-request', [appLog])
+          await sleep(400)
+          await win.webContents.executeJavaScript(
+            `document.dispatchEvent(new CustomEvent('logpad-smoke-workspace', { detail: { dir: ${JSON.stringify(samplesDir)} } }))`
+          )
+          await sleep(1500) // 等 Monaco 着色与目录树渲染稳定
+          await save(join(dir, 'main.png'))
+
+          // 2) Ctrl+F 查找对话框 + 搜索结果面板（保持对话框打开）
+          await win.webContents.executeJavaScript(`(async () => {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 'f', code: 'KeyF', ctrlKey: true, bubbles: true, cancelable: true }))
+            await new Promise((r) => setTimeout(r, 150))
+            const dlg = document.querySelector('.lp-finddlg')
+            if (dlg) {
+              dlg.querySelector('#lp-what').value = 'ERROR'
+              dlg.querySelector('#lp-btn-all').click()
+            }
+          })()`)
+          await sleep(800)
+          await save(join(dir, 'search.png'))
+
+          // 3) Ctrl+Shift+F 文件夹搜索（samples 目录，按文件分组结果）
+          const ifErr = await win.webContents.executeJavaScript(`(async () => {
+            try {
+              window.dispatchEvent(new KeyboardEvent('keydown', { key: 'F', code: 'KeyF', ctrlKey: true, shiftKey: true, bubbles: true, cancelable: true }))
+              await new Promise((r) => setTimeout(r, 150))
+              const dlg = document.querySelector('.lp-finddlg')
+              if (dlg) {
+                dlg.querySelector('#lp-dir').value = ${JSON.stringify(samplesDir)}
+                dlg.querySelector('#lp-what').value = 'ERROR'
+                dlg.querySelector('#lp-btn-ifall').click()
+              }
+              return 'ok'
+            } catch (err) {
+              return 'ERR: ' + (err && err.stack || err)
+            }
+          })()`)
+          if (ifErr !== 'ok') console.error('[shots] step3:', ifErr)
+          for (let i = 0; i < 40; i++) {
+            await sleep(250)
+            let st = ''
+            try {
+              st = await win.webContents.executeJavaScript(
+                `(() => { try { const d = document.querySelector('.lp-finddlg'); const s = d && d.querySelector('#lp-fd-status'); return s ? s.textContent : '' } catch (e) { return 'JSERR:' + e.message } })()`
+              )
+            } catch (e) {
+              console.error('[shots] poll failed:', e.message)
+              break
+            }
+            if (typeof st !== 'string' || !/扫描/.test(st)) break
+          }
+          await sleep(600)
+          await save(join(dir, 'find-in-files.png'))
+        } catch (err) {
+          console.error('[shots] failed:', err)
+        } finally {
+          app.quit()
+        }
+      }, 3000)
+    })
+  }
+
   // ===== 冒烟验证钩子 =====
   // LOGPAD_SMOKE=1：窗口加载完成 3 秒后截屏写入 .smoke/app.png 并自动退出（应用可启动、渲染无白屏）。
   // LOGPAD_SMOKE=find：附加查找流程验证（Ctrl+F 对话框 → 计数 → 全部查找 → 搜索结果面板），截屏 .smoke/find.png。
